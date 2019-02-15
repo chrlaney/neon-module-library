@@ -1,6 +1,14 @@
 library(shiny)
 library(tidyverse)
 library(jsonlite)
+library(leaflet)
+
+getProducts <- function(){
+  pr <- jsonlite::fromJSON(txt = "http://data.neonscience.org/api/v0/products")
+  pr <- pr[["data"]]
+}
+pr <- getProducts()
+pr <- pr[pr$productStatus=="ACTIVE", ]
 
 # Module UI function
 sitesByProductMapUI <- function(id) {
