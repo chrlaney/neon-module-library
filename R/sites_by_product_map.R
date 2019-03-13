@@ -3,6 +3,8 @@ library(tidyverse)
 library(jsonlite)
 library(leaflet)
 
+fs <- readRDS("data/field_sites.rds")
+
 getProducts <- function(){
   pr <- jsonlite::fromJSON(txt = "http://data.neonscience.org/api/v0/products")
   pr <- pr[["data"]]
@@ -55,8 +57,7 @@ sitesByProductMap <- function(input, output, session){
     d <- d[, 1:2]
     s <- sites[, -match("dataProducts", names(sites))]
     d <- merge(d, s, by = "siteCode", all.x = T, all.y = F)
-    d.ns <- read.csv("data/field-sites.csv", header = T, stringsAsFactors = F)
-    d <- merge(d, d.ns, by.x = "siteCode", by.y = "Site.ID", all.x = T, all.y = F)
+    d <- merge(d, fs, by.x = "siteCode", by.y = "Site.ID", all.x = T, all.y = F)
     
 # For some strange reason, they have severely limited the choice of marker colors. See ?awesomeIcons
     icons <- awesomeIcons(
@@ -76,17 +77,3 @@ sitesByProductMap <- function(input, output, session){
   
   output$map <- renderLeaflet(makeSiteMap())
 }
-
-#### In a shiny app ####
-# source("sites_by_product_map.R")
-
-# ui <- fluidPage(
-#   h2("Sites"),
-#   sitesByProductMapUI("mysites")
-# )
-# 
-# server <- function(input, output, session){
-#   callModule(sitesByProductMap, "mysites")
-# }
-# 
-# shinyApp(ui, server)

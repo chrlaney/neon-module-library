@@ -3,6 +3,7 @@
 library(shiny)
 library(tidyverse)
 library(jsonlite)
+library(DT)
 
 getChangeLogs <- function(){
   pr <- jsonlite::fromJSON(txt = "http://data.neonscience.org/api/v0/products")
@@ -27,17 +28,3 @@ changeLogTable <- function(input, output, session){
 }
 
 
-#### In a shiny app ####
-
-# source("change_log_table.R")
-# 
-# ui <- fluidPage(
-#   h2("Change Logs"),
-#   changeLogTableUI("mylogs")
-# )
-# 
-# server <- function(input, output, session){
-#   callModule(changeLogTable, "mylogs")
-# }
-
-# shinyApp(ui, server)
